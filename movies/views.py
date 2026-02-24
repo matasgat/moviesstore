@@ -17,21 +17,32 @@ def index(request):
 def show(request, id):
     movie = Movie.objects.get(id=id)
     reviews = Review.objects.filter(movie=movie)
+    user_review = None
+    if request.user.is_authenticated:
+        user_review = Review.objects.filter(movie=movie, user=request.user).first()
     template_data = {}
     template_data['title'] = movie.name
     template_data['movie'] = movie
     template_data['reviews'] = reviews
+    template_data['user_review'] = user_review
+    template_data['average_rating'] = movie.average_rating()
     return render(request, 'movies/show.html', {'template_data': template_data})
 
 @login_required
 def create_review(request, id):
-    if request.method == 'POST' and request.POST['comment'] != '':
+    if request.method == 'POST':
         movie = Movie.objects.get(id=id)
-        review = Review()
-        review.comment = request.POST['comment']
-        review.movie = movie
-        review.user = request.user
-        review.save()
+        if Review.objects.filter(movie=movie, user=request.user).exists():
+            return redirect('movies.show', id=id)
+        comment = request.POST.get('comment')
+        rating = request.POST.get('rating')
+        if rating:
+            review = Review()
+            review.rating = int(rating)
+            review.comment = comment
+            review.movie = movie
+            review.user = request.user
+            review.save()
         return redirect('movies.show', id=id)
     else:
         return redirect('movies.show', id=id)
@@ -45,12 +56,16 @@ def edit_review(request, id, review_id):
         template_data = {}
         template_data['title'] = 'Edit Review'
         template_data['review'] = review
+        template_data['movie_id'] = id
         return render(request, 'movies/edit_review.html',
             {'template_data': template_data})
-    elif request.method == 'POST' and request.POST['comment'] != '':
-        review = Review.objects.get(id=review_id)
-        review.comment = request.POST['comment']
-        review.save()
+    elif request.method == 'POST':
+        rating = request.POST.get('rating')
+        comment = request.POST.get('comment', '')
+        if rating:
+            review.rating = int(rating)
+            review.comment = comment
+            review.save()
         return redirect('movies.show', id=id)
     else:
         return redirect('movies.show', id=id)

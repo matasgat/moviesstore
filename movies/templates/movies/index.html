@@ -34,6 +34,20 @@
                         <a href="{% url 'movies.show' id=movie.id %}" class="btn bg-dark text-white">
                             {{ movie.name }}
                         </a>
+                        {% with rating=movie.average_rating %}
+                            {% if rating > 0 %}
+                                <div class="mt-2 small">
+                                    {% for i in "12345"|make_list %}
+                                        {% if forloop.counter <= rating %}
+                                            <span class="text-warning">★</span>
+                                        {% else %}
+                                            <span class="text-secondary">★</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="text-muted">({{ rating|floatformat }})</span>
+                                </div>
+                            {% endif %}
+                        {% endwith %}
                     </div>
                 </div>
             </div>
