@@ -4,6 +4,9 @@ from .forms import CustomUserCreationForm, CustomErrorList
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from cart.models import Order, Item
+from django.db.models import Sum, Count
+from django.contrib.admin.views.decorators import staff_member_required
 
 # Create your views here.
 @login_required
@@ -53,3 +56,23 @@ def orders(request):
     template_data['orders'] = request.user.order_set.all()
     return render(request, 'accounts/orders.html',
         {'template_data': template_data})
+
+@staff_member_required
+def admin_dashboard(request):
+
+    users = User.objects.filter(is_staff=False).annotate(
+        total_movies_purchased = Sum('order__item__quantity'),
+        total_orders = Count('order', distinct=True),
+        total_spent = Sum('order__total')
+    ).order_by('-total_movies_purchased')
+
+    top_user = users.first()
+
+    template_data = {
+        'title': 'Admin Dashboard',
+        'users': users,
+        'top_user': top_user,
+        'top_user_count': top_user.total_movies_purchased
+    }
+
+    return render(request, 'accounts/admin_dashboard.html', {'template_data': template_data})

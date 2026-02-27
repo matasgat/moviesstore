@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-3">
+	<div class="container">
+		<h2>Admin Dashboard</h2>
+		<hr />
+
+		{% if template_data.top_user %}
+		<div class="alert alert-success">
+			<h4 class="alert-heading">Top Purchaser</h4>
+			<p class='mb-0'>
+				<strong>{{ template_data.top_user.username }}</strong>
+				<br/>
+				<strong>Movies Purchased: {{ template_data.top_user_count }}</strong>
+			</p>
+		</div>
+		{% endif %}
+
+		<div class="card">
+			<div class="card-header bg-dark text-white">
+				<h5 class="mb-0">User Purchase Statistics:</h5>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-hover">
+						<thead>
+							<th>Rank</th>
+							<th>Username</th>
+							<th>Movies Purchased</th>
+							<th>Total Orders</th>
+							<th>Total Money Spent</th>
+						</thead>
+						<tbody>
+							{% for user in template_data.users %}
+							<tr>
+								<td>#{{forloop.counter}}</td>
+								<td>{{ user.username }}</td>
+								<td>{{ user.total_movies_purchased }}</td>
+								<td>{{ user.total_orders}}</td>
+								<td>{{ user.total_spent|default:'0'}}</td>
+							</tr>
+							{% empty %}
+								<td>No users have made any purchases yet</td>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+{% endblock %}
