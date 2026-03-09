@@ -26,7 +26,46 @@
 			</p>
 		</div>
 		{% endif %}
-
+		<div class="row mb-3">
+			<div class="col-md-12">
+				<div class="card shadow-sm">
+					<div class="card-header bg-primary text-white">
+						<h5 class="mb-0"><i class="fas fa-shopping-cart"></i> Most Purchased Movie</h5>
+					</div>
+					<div class ="card-body">
+						{% if template_data.purchased_count > 0 %}
+							<p class="card-text mb-0">
+								<strong>{{ template_data.most_purchased_movie.name }}</strong><br/>
+								<p>Times Purchased: {{ template_data.purchased_count }}</p>
+							</p>
+						{% else %}
+							<p class="text-muted"> No purchases yet.</p>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row mb-3">
+			<div class="col-md-12">
+				<div class="card shadow-sm">
+					<div class="card-header bg-primary text-white">
+						<h5 class="mb-0"><i class="fas fa-comments"></i> Most Reviewed Movie</h5>
+					</div>
+					<div class ="card-body">
+						{% if template_data.reviewed_count > 0 %}
+							<p class="card-text mb-0">
+								<strong>{{ template_data.most_reviewed_movie.name }}</strong><br/>
+								<p>Times Reviewed: {{ template_data.reviewed_count }}</p>
+							</p>
+						{% else %}
+							<p class="text-muted"> No reviews yet.</p>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+		
 		<div class="card">
 			<div class="card-header bg-dark text-white">
 				<h5 class="mb-0">User Purchase Statistics:</h5>
