@@ -68,11 +68,20 @@ def admin_dashboard(request):
 
     top_user = users.first()
 
+    commenters = User.objects.filter(is_staff=False).annotate(
+        total_comments = Count('review', distinct=True)
+    ).order_by('-total_comments')
+
+    top_commenter = commenters.first()
+
     template_data = {
         'title': 'Admin Dashboard',
         'users': users,
         'top_user': top_user,
-        'top_user_count': top_user.total_movies_purchased
+        'top_user_count': top_user.total_movies_purchased,
+        'commenters': commenters,
+        'top_commenter': top_commenter,
+        'top_commenter_count': top_commenter.total_comments
     }
 
     return render(request, 'accounts/admin_dashboard.html', {'template_data': template_data})

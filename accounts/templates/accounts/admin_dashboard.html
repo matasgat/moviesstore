@@ -16,6 +16,17 @@
 		</div>
 		{% endif %}
 
+		{% if template_data.top_commenter %}
+		<div class="alert alert-success">
+			<h4 class="alert-heading">Top Commenter</h4>
+			<p class='mb-0'>
+				<strong>{{ template_data.top_commenter.username }}</strong>
+				<br/>
+				<strong>Comments Posted: {{ template_data.top_commenter_count }}</strong>
+			</p>
+		</div>
+		{% endif %}
+
 		<div class="card">
 			<div class="card-header bg-dark text-white">
 				<h5 class="mb-0">User Purchase Statistics:</h5>
@@ -41,6 +52,34 @@
 							</tr>
 							{% empty %}
 								<td>No users have made any purchases yet</td>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-header bg-dark text-white">
+				<h5 class="mb-0">User Comment Statistics:</h5>
+			</div>
+			<div class="card-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-hover">
+						<thead>
+							<th>Rank</th>
+							<th>Username</th>
+							<th>Comments Posted</th>
+						</thead>
+						<tbody>
+							{% for user in template_data.commenters %}
+							<tr>
+								<td>#{{forloop.counter}}</td>
+								<td>{{ user.username }}</td>
+								<td>{{ user.total_comments|default:'0'}}</td>
+							</tr>
+							{% empty %}
+								<td>No comments have been posted yet.</td>
 							{% endfor %}
 						</tbody>
 					</table>
