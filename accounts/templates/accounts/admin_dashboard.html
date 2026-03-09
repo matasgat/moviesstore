@@ -26,7 +26,33 @@
 			</p>
 		</div>
 		{% endif %}
-
+		<div class="col-md-6">
+			<div class="card border-primary h-100">
+				<div class ="card-body text-center">
+					{% if template_data.most_purchased_movie and template_data.most_purchased_movie.times_bought %}
+						<h3 class="card-title">{{ template_data.most_purchased_movie.name }}</h3>
+						<p class="card-text fs-4">Bought <strong>{{ template_data.most_purchased_movie.times_bought }}</strong>times</p>
+					{% else %}
+						<p class="text-muted"> No purchases yet.</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="card border-info h-100">
+				<div class ="card-header bg-info text-white">
+					<h5 class="mb-0"><i class="fas fa-comments"></i> Most Reviewed Movie</h5>
+				</div>
+				<div class="card-body text-center">
+					{% if template_data.most_reviewed_movie and template_data.most_reviewed_movie.review_count %}
+						<h3 class="card-title">{{ template_data.most_reviewed_movie.name }}</h3>
+						<p class="card-text fs-4">Reviewed <strong>{{ template_data.most_reviewed_movie.review_count }}</strong>times</p>
+					{% else %}
+						<p class="text-muted"> No reviews yet.</p>
+					{% endif %}
+				</div>
+			</div>
+		</div>
 		<div class="card">
 			<div class="card-header bg-dark text-white">
 				<h5 class="mb-0">User Purchase Statistics:</h5>

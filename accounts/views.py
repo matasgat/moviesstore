@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from cart.models import Order, Item
 from django.db.models import Sum, Count
 from django.contrib.admin.views.decorators import staff_member_required
+from movies.models import Movie
 
 # Create your views here.
 @login_required
@@ -68,6 +69,14 @@ def admin_dashboard(request):
 
     top_user = users.first()
 
+    most_purchased_movie = Movie.objects.annotate(
+        times_bought=Sum('item__quantity')
+    ).order_by('times_bought').first()
+
+    most_reviewed_movie = Movie.objects.annotate(
+        review_count = Count('review')
+    ).order_by('review_count').first()
+
     commenters = User.objects.filter(is_staff=False).annotate(
         total_comments = Count('review', distinct=True)
     ).order_by('-total_comments')
@@ -81,7 +90,9 @@ def admin_dashboard(request):
         'top_user_count': top_user.total_movies_purchased,
         'commenters': commenters,
         'top_commenter': top_commenter,
-        'top_commenter_count': top_commenter.total_comments
+        'top_commenter_count': top_commenter.total_comments,
+        'most_purchased_movie': most_purchased_movie,
+        'most_reviewed_movie': most_reviewed_movie,
     }
 
     return render(request, 'accounts/admin_dashboard.html', {'template_data': template_data})
